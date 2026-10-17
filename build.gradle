@@ -7,17 +7,21 @@ plugins {
 group = 'org.example'
 version = findProperty('version') ?: '0.1.0'
 
-sourceComatlibility = '23'
-targetComatlibility = '23'
+java {
+    sourceCompatibility = JavaVersion.VERSION_23
+    targetCompatibility = JavaVersion.VERSION_23
+}
 
-mainClassName = 'org.example.TodoApp'
+application {
+    mainClass = 'org.example.TodoApp'
+}
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testImplementation platform('org.junit:junit-bom:6.0.0')
+    testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }
 
@@ -27,7 +31,7 @@ test {
 
 shadowJar {
     archiveBaseName.set('todo-app')
-    archiveClassifier.set('') // no classifier: produce todo-app-<version>.jar
+    archiveClassifier.set('')
     archiveVersion.set(project.version.toString())
     mergeServiceFiles()
 }
@@ -36,20 +40,16 @@ tasks.jar {
     enabled = false
 }
 
-tasks.named('distZip') { Task it ->
+tasks.named('distZip') {
     dependsOn tasks.named('shadowJar')
 }
 
-tasks.named('distTar') { Task it ->
+tasks.named('distTar') {
     dependsOn tasks.named('shadowJar')
 }
 
-tasks.named('startScripts') { Task it ->
+tasks.named('startScripts') {
     dependsOn tasks.named('shadowJar')
-}
-
-tasks.named('startShadowScripts') { Task it ->
-    dependsOn tasks.named('jar')
 }
 
 tasks.build {
